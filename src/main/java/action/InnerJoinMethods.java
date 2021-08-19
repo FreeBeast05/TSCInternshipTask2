@@ -23,21 +23,17 @@ public class InnerJoinMethods {
     }
 
     public static void joinForLinkedList(List<Data> linked1, List<Data> linked2, String path) {
-        int count = 0;
-        List<Data> linkedList1;
-        List<Data> linkedList2;
+        List<Data> linkedList1 = linked2;
+        List<Data> linkedList2 = linked1;
         if (linked1.size() > linked2.size()) {
             linkedList1 = linked1;
             linkedList2 = linked2;
-        } else {
-            linkedList1 = linked2;
-            linkedList2 = linked1;
         }
         int[] startIndex = findStartIndex(linkedList1, linkedList2);
         List<Data> list1 = linkedList1.subList(startIndex[0], linkedList1.size());
         List<Data> list2 = linkedList2.subList(startIndex[1], linkedList2.size());
-        int step = 0;
-        int countStr = 1;
+
+        int count = 0, step = 0, countStr = 1;
         for (Data data : list1) {
             int j = count;
             long number1 = data.getNumber();
@@ -64,7 +60,7 @@ public class InnerJoinMethods {
         AtomicInteger countStr = new AtomicInteger(1);
         for (Long number : hashMap1.keySet()) {
             List<String> list1 = hashMap1.get(number);
-            if ( hashMap2.containsKey(number)) {
+            if (hashMap2.containsKey(number)) {
                 for (String str : list1) {
                     hashMap2.get(number).forEach(s -> WriteFile.write(countStr.getAndIncrement() + ". " + number + " " + str + " " + s, path));
                 }
