@@ -4,12 +4,11 @@ import entities.Data;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ReadInputFile {
 
-    public static List<Data> fillArrayList(String path) {
-        List<Data> arrayList = new ArrayList<>();
+    public static ArrayList<Data> fillArrayList(String path) {
+        ArrayList<Data> arrayList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -24,7 +23,6 @@ public class ReadInputFile {
                     System.out.println("Введен не числовой формат входного ключа");
                 }
             }
-
         } catch (FileNotFoundException e) {
             System.out.println("Файл не найден");
         } catch (UnsupportedEncodingException e) {
@@ -33,8 +31,5 @@ public class ReadInputFile {
             System.out.println("Возникла ошибка ввода");
         }
         return arrayList;
-
     }
-
-
 }

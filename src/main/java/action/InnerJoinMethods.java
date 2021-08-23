@@ -2,92 +2,88 @@ package action;
 
 import entities.Data;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InnerJoinMethods {
-    public static void joinForArrayList(List<Data> arrayList1, List<Data> arrayList2, String path) {
-        int count = 0;
-        for (Data data1 : arrayList1) {
-            long number1 = data1.getNumber();
-            for (Data data2 : arrayList2) {
-                if (number1 == data2.getNumber()) {
-                    count++;
-                    WriteFile.write(count + ". " + number1 + " "
-                            + data1.getValue() + " " + data2.getValue(), path);
+    private static final String OUTSTR = "%d. %d  %s %s\n";
+
+    public static void joinForArrayList(ArrayList<Data> arrayList1, ArrayList<Data> arrayList2, String path) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
+            int countStr = 1;
+            for (Data data1 : arrayList1) {
+                for (Data data2 : arrayList2) {
+                    if (data1.getNumber() == data2.getNumber()) {
+                        writer.write(String.format(OUTSTR, countStr++, data1.getNumber(), data1.getValue(), data2.getValue()));
+                    }
                 }
             }
+        } catch (IOException e) {
+            System.out.println("Возникла ошибка записи  в " + path);
         }
     }
 
-    public static void joinForLinkedList(List<Data> linked1, List<Data> linked2, String path) {
-        List<Data> linkedList1 = linked2;
-        List<Data> linkedList2 = linked1;
-        if (linked1.size() > linked2.size()) {
-            linkedList1 = linked1;
-            linkedList2 = linked2;
-        }
-        int[] startIndex = findStartIndex(linkedList1, linkedList2);
-        List<Data> list1 = linkedList1.subList(startIndex[0], linkedList1.size());
-        List<Data> list2 = linkedList2.subList(startIndex[1], linkedList2.size());
 
-        int count = 0, step = 0, countStr = 1;
-        for (Data data : list1) {
-            int j = count;
-            long number1 = data.getNumber();
-            for (; j < list2.size(); j++) {
-                int res = Long.compare(list2.get(j).getNumber(), number1);
-                if (res > 0) {
-                    break;
-                } else if (res < 0) {
-                    count++;
-                } else {
-                    WriteFile.write(countStr + ". " + number1 + " " + data.getValue() + " " + list2.get(j).getValue(), path);
-                    countStr++;
-                    step++;
-                    count++;
+    public static void joinForLinkedList(LinkedList<Data> linked1, LinkedList<Data> linked2, String path) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
+            ListIterator<Data> listIterator1 = linked1.listIterator();
+            ListIterator<Data> listIterator2 = linked2.listIterator();
+            int count = 1, countStr = 1;
+            while (listIterator1.hasNext()) {
+                Data data1 = listIterator1.next();
+                while (listIterator2.hasNext()) {
+                    Data data2 = listIterator2.next();
+                    if (data1.getNumber() < data2.getNumber()) {
+                        walkBack(listIterator2, count);
+                        count = 1;
+                        break;
+                    } else if (data1.getNumber() == data2.getNumber()) {
+                        writer.write(String.format(OUTSTR, countStr++, data1.getNumber(), data1.getValue(), data2.getValue()));
+                        count += 1;
+                        if (!listIterator2.hasNext()) {
+                            walkBack(listIterator2, count);
+                            count = 1;
+                            break;
+                        }
+                    }
                 }
             }
-            count -= step;
-            step = 0;
+        } catch (IOException e) {
+            System.out.println("Возникла ошибка записи  в " + path);
         }
-
     }
+
+    private static void walkBack(ListIterator<Data> iterator, int count) {
+        for (int i = 0; i < count; i++) {
+            iterator.previous();
+        }
+    }
+
 
     public static void joinForHashMap(Map<Long, List<String>> hashMap1, Map<Long, List<String>> hashMap2, String path) {
-        AtomicInteger countStr = new AtomicInteger(1);
-        for (Long number : hashMap1.keySet()) {
-            List<String> list1 = hashMap1.get(number);
-            if (hashMap2.containsKey(number)) {
-                for (String str : list1) {
-                    hashMap2.get(number).forEach(s -> WriteFile.write(countStr.getAndIncrement() + ". " + number + " " + str + " " + s, path));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
+            AtomicInteger countStr = new AtomicInteger(1);
+            for (Long number : hashMap1.keySet()) {
+                List<String> list1 = hashMap1.get(number);
+                if (hashMap2.containsKey(number)) {
+                    for (String str : list1) {
+                        hashMap2.get(number).forEach(s -> {
+                            try {
+                                writer.write(countStr.getAndIncrement() + ". " + number + " " + str + " " + s + "\n");
+                            } catch (IOException e) {
+                                System.out.println("Возникла ошибка записи  в " + path);
+                            }
+                        });
+                    }
                 }
             }
+        } catch (IOException e) {
+            System.out.println("Возникла ошибка записи  в " + path);
         }
     }
 
-    private static int[] findStartIndex(List<Data> linkedList1, List<Data> linkedList2) {
-        int index2 = -1, index1 = -1;
-        try {
-            while (index2 < 0) {
-                index1++;
-                index2 = Collections.binarySearch(linkedList2, linkedList1.get(index1));
-            }
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Совпадений не найдено");
-            System.exit(1);
-        }
-        while (index2 > 0 && linkedList2.get(index2 - 1).equals(linkedList2.get(index2))) {
-            if (index2 == 1 && linkedList2.get(0).equals(linkedList2.get(index2))) {
-                index2--;
-                break;
-            }
-            index2--;
-        }
-        return new int[]{index1, index2};
-
-    }
 
 }

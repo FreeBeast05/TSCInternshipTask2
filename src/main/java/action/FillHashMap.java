@@ -2,16 +2,17 @@ package action;
 
 import entities.Data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FillHashMap {
     public static Map<Long, List<String>> fillMap(List<Data> linkedList) {
-        Map<Long, List<String>> hashMap = new HashMap<>();
-        linkedList.forEach(s -> hashMap.putIfAbsent(s.getNumber(), new ArrayList<>()));
-        linkedList.forEach(s -> hashMap.get(s.getNumber()).add(s.getValue()));
+        Map<Long, List<String>> hashMap = new HashMap<>(1);
+        for (Data data : linkedList) {
+            if (!hashMap.containsKey(data.getNumber())) {
+                hashMap.put(data.getNumber(), new ArrayList<>());
+            }
+            hashMap.get(data.getNumber()).add(data.getValue());
+        }
         return hashMap;
     }
 }
