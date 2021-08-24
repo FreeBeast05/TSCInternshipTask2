@@ -28,8 +28,8 @@ public class Main {
         long diffTime2 = System.currentTimeMillis() - startTime2;
         System.out.println("Время работы с LinkedList: " + diffTime2);
 
-        Map<Long, List<String>> hashMap1 = FillHashMap.fillMap(linkedList1);
-        Map<Long, List<String>> hashMap2 = FillHashMap.fillMap(linkedList2);
+        HashMap<Long, List<String>> hashMap1 = FillHashMap.fillMap(linkedList1);
+        HashMap<Long, List<String>> hashMap2 = FillHashMap.fillMap(linkedList2);
         long startTime3 = System.currentTimeMillis();
         InnerJoinMethods.joinForHashMap(hashMap1, hashMap2, paths.getFileOutputForMap());
         long diffTime3 = System.currentTimeMillis() - startTime3;

@@ -63,7 +63,7 @@ public class InnerJoinMethods {
     }
 
 
-    public static void joinForHashMap(Map<Long, List<String>> hashMap1, Map<Long, List<String>> hashMap2, String path) {
+    public static void joinForHashMap(HashMap<Long, List<String>> hashMap1, HashMap<Long, List<String>> hashMap2, String path) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
             AtomicInteger countStr = new AtomicInteger(1);
             for (Long number : hashMap1.keySet()) {
