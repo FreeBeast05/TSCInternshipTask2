@@ -17,7 +17,7 @@ public class Main {
         long startTime = System.currentTimeMillis();
         InnerJoinMethods.joinForArrayList(arrayList1, arrayList2, paths.getFileOutputForArray());
         long diffTime = System.currentTimeMillis() - startTime;
-        System.out.println("Время работа с ArrayList: " + diffTime);
+        System.out.println("Время работы с ArrayList: " + diffTime);
 
         LinkedList<Data> linkedList1 = new LinkedList<>(arrayList1);
         LinkedList<Data> linkedList2 = new LinkedList<>(arrayList2);
@@ -26,14 +26,14 @@ public class Main {
         long startTime2 = System.currentTimeMillis();
         InnerJoinMethods.joinForLinkedList(linkedList1, linkedList2, paths.getFileOutputForLinked());
         long diffTime2 = System.currentTimeMillis() - startTime2;
-        System.out.println("Время работа с LinkedList: " + diffTime2);
+        System.out.println("Время работы с LinkedList: " + diffTime2);
 
         Map<Long, List<String>> hashMap1 = FillHashMap.fillMap(linkedList1);
         Map<Long, List<String>> hashMap2 = FillHashMap.fillMap(linkedList2);
         long startTime3 = System.currentTimeMillis();
         InnerJoinMethods.joinForHashMap(hashMap1, hashMap2, paths.getFileOutputForMap());
         long diffTime3 = System.currentTimeMillis() - startTime3;
-        System.out.println("Время работа с HashMap: " + diffTime3);
+        System.out.println("Время работы с HashMap: " + diffTime3);
 
 
     }

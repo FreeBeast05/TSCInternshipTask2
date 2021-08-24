@@ -26,7 +26,7 @@ public class ReadInputFile {
         } catch (FileNotFoundException e) {
             System.out.println("Файл не найден");
         } catch (UnsupportedEncodingException e) {
-            System.out.println("Кодировка файла не известна");
+            System.out.println("Кодировка файла неизвестна");
         } catch (IOException e) {
             System.out.println("Возникла ошибка ввода");
         }
